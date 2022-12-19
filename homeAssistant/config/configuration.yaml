@@ -1,0 +1,139 @@
+
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Load frontend themes from the themes folder
+frontend:
+  themes: !include_dir_merge_named themes
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+ebusd:
+  host: 127.0.0.1
+  port: 8888
+  circuit: "700"
+
+switch:
+  - platform: mystrom
+    host: 192.168.1.244
+    name: plug_and_play_solar
+
+sensor:
+  - platform: rest
+    resource: http://192.168.1.244/report
+    name: "P&P Solar Power"
+    value_template: "{{ value_json.power }}"
+    unit_of_measurement: W
+    unique_id: mystrom.power
+    scan_interval: 10
+  - platform: rest
+    resource: http://192.168.1.244/report
+    name: "P&P Solar Energy"
+    unique_id: mystrom.energy_ws
+    value_template: "{{ value_json.Ws }}"
+    unit_of_measurement: Ws
+    scan_interval: 10
+
+template:
+  - sensor:
+      - name: "P&P Solar Energy"
+        unit_of_measurement: "kWh"
+        unique_id: mystrom.energy_kwh
+        device_class: energy
+        state_class: total_increasing
+        state: >
+          {{ (states('sensor.p_p_solar_energy_2')|float / 1000|float / 3600|float) }}
+
+  - sensor:
+      - name: "Powermeter power total"
+        unit_of_measurement: "W"
+        unique_id: shelly.powermeter_power_total
+        state: >
+          {{ (states('sensor.phase1_power')|float +
+              states('sensor.phase2_power')|float +
+              states('sensor.phase3_power')|float)|round(2)|float
+          }}
+
+  - sensor:
+      - name: "Powermeter energy total"
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state_class: total_increasing
+        unique_id: shelly.powermeter_energy_total
+        state: >
+          {{ (states('sensor.phase1_energy')|float +
+              states('sensor.phase2_energy')|float +
+              states('sensor.phase3_energy')|float)|round(2)|float
+          }}
+
+  - sensor:
+      - name: "Powermeter energy return total"
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state_class: total_increasing
+        unique_id: shelly.powermeter_energy_return_total
+        state: >
+          {{ (states('sensor.phase1_energy_returned')|float +
+              states('sensor.phase2_energy_returned')|float +
+              states('sensor.phase3_energy_returned')|float)|round(2)|float
+          }}
+
+  - sensor:
+      - name: "Solarplant energy total"
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state_class: total_increasing
+        unique_id: shelly.solarplant_energy_total
+        state: >
+          {{ (states('sensor.shellyem3_349454747c42_channel_a_energy')|float +
+              states('sensor.shellyem3_349454747c42_channel_b_energy')|float +
+              states('sensor.shellyem3_349454747c42_channel_c_energy')|float)|round(2)|float
+          }}
+
+  - sensor:
+      - name: "Roof solarplant power total"
+        unit_of_measurement: "W"   
+        unique_id: shelly.roof_solarplant_power_total
+        state: >
+          {{ (states('sensor.shellyem3_349454747c42_channel_a_power')|float +
+              states('sensor.shellyem3_349454747c42_channel_b_power')|float +
+              states('sensor.shellyem3_349454747c42_channel_c_power')|float)|round(2)|float
+          }}
+
+  - sensor:
+      - name: "Solarplant power total"
+        unit_of_measurement: "W"   
+        unique_id: shelly.solarplant_power_total
+        state: >
+          {{ (states('sensor.roof_solarplant_power_total')|float +
+              states('sensor.p_p_solar_power')|float)|round(2)|float
+          }}
+
+  - sensor:
+      - name: "Solarplant energy return total"
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state_class: total_increasing
+        unique_id: shelly.solarplant_energy_return_total
+        state: >
+          {{ (states('sensor.shellyem3_349454747c42_channel_a_energy_returned')|float +
+              states('sensor.shellyem3_349454747c42_channel_b_energy_returned')|float +
+              states('sensor.shellyem3_349454747c42_channel_c_energy_returned')|float)|round(2)|float
+          }}
+
+  - sensor:
+      - name: "Solar power surplus"
+        unit_of_measurement: "W"
+        unique_id: shelly.solarpower_surplus
+        state: >
+          {% if states('sensor.powermeter_power_total')|float >= 0 %}
+              {{ '0'|float }}
+          {% else %}
+              {{ states('sensor.powermeter_power_total')|float * -1|round(2) }}
+          {% endif %}

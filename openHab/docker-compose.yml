@@ -1,0 +1,54 @@
+version: "3.0"
+services:
+    frontail:
+        image: schnuecks/frontail-multi:latest
+        command: --disable-usage-stats --ui-highlight --ui-highlight-preset /frontail/preset/openhab_AEM.json -t openhab_AEM -l 5000 -n 100 /logs/openhab.log /logs/events.log
+        volumes:
+            - /home/tv/dockerContainers/openHab/userdata/logs:/logs:ro
+        ports:
+            - "9001:9001"
+        restart: unless-stopped
+
+#    mongodb:
+#        image: mongo:5.0
+#        environment:
+#            - MONGO_INITDB_ROOT_USERNAME=openhab
+#            - MONGO_INITDB_ROOT_PASSWORD=openhab
+#        volumes:
+#            - ./mongodb:/data/db
+#        ports:
+#            - 27017:27017
+#
+#    influxdb:
+#        image: influxdb:1.0
+#        volumes:
+#            - ./data:/var/lib/influxdb1
+#            - ./influx-config:/etc/influxdb1
+#        ports:
+#            - "8086:8086"
+#        environment:
+#            - DOCKER_INFLUXDB_INIT_MODE=setup
+#            - DOCKER_INFLUXDB_INIT_USERNAME=openhab
+#            - DOCKER_INFLUXDB_INIT_PASSWORD=OK4Et1f0dn
+#            - DOCKER_INFLUXDB_INIT_ORG=my-org
+#            - DOCKER_INFLUXDB_INIT_BUCKET=my-bucket
+#            - DOCKER_INFLUXDB_INIT_RETENTION=1w
+#            - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=gBqnW;?.FC?:YQbDkzC9 
+   
+    openhab:
+        image: openhab/openhab:3.3.0-debian
+        container_name: openhab
+        volumes:
+            - /home/tv/dockerContainers/openHab/conf:/openhab/conf
+            - /home/tv/dockerContainers/openHab/userdata:/openhab/userdata
+            - /home/tv/dockerContainers/openHab/addons:/openhab/addons
+        environment:
+            - USER_ID=998
+            - GROUP_ID=997
+            - CRYPTO_POLICY=unlimited
+        ports:
+            - 0.0.0.0:8080:8080
+        expose:
+            - 8080
+        restart: always
+                

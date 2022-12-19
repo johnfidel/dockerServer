@@ -1,0 +1,54 @@
+- id: '1670962863559'
+  alias: WP Boiler force ON
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.wp_boiler_force_threshold
+    attribute: sensor_value
+    for:
+      hours: 0
+      minutes: 3
+      seconds: 0
+    from: 'OFF'
+    to: 'ON'
+  condition: []
+  action:
+  - type: turn_on
+    device_id: 118b8c5734ac3b597bb20bdc016ae97c
+    entity_id: switch.powermeter
+    domain: switch
+  mode: single
+- id: '1670962923168'
+  alias: WP Boiler force OFF
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.wp_boiler_force_threshold
+    attribute: sensor_value
+    from: 'ON'
+    to: 'OFF'
+    for:
+      hours: 0
+      minutes: 3
+      seconds: 0
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 118b8c5734ac3b597bb20bdc016ae97c
+    entity_id: switch.powermeter
+    domain: switch
+  mode: single
+- id: '1671220882092'
+  alias: Smart PV plug controller
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.smart_pv_plug_threshold
+  condition: []
+  action:
+  - service: script.smart_pv_surplus_powerplug
+    data: {}
+  mode: single

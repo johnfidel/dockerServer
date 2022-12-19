@@ -1,0 +1,28 @@
+version: '3'
+services:
+    ebusd:
+        image: john30/ebusd
+        volumes:
+            - ./ebusd-configuration:/home/ebusd-configuration
+            - ./ebusd-etc:/etc           
+        environment:
+            - EBUSD_DEVICE=192.168.1.4:5555
+            #- EBUSD_SCANCONFIG=./ebusd-configuration/ebusd-2.x.x/de/vaillant/08.hmu00.csv
+            - EBUSD_CONFIGPATH=/home/ebusd-configuration/ebusd-2.1.x/de/
+            #- EBUSD_HTTPPORT=80
+            - EBUSD_MQTTHOST=0.0.0.0
+            - EBUSD_MQTTPORT=1883
+            - EBUSD_MQTTINT=/etc/mqtt-hassio.cfg
+            - EBUSD_MQTTJSON
+            - EBUSD_MQTTTOPIC=ebusd
+            - EBUSD_LOG=all:notice
+        ports:
+            - 0.0.0.0:8888:8888
+            - 0.0.0.0:80:80
+        expose:
+            - 8888
+            #- 80
+
+#sudo ebusd -f -d 192.168.1.4:5555 -p 8888 --mqtthost localhost --mqttport 1883 --mqttint=/etc/ebusd/mqtt-hassio.cfg 
+#--mqttjson --mqtttopic=ebusd --log=all:notice --configpath=ebusd-configuration/ebusd-2.1.x/de --scanconfig
+

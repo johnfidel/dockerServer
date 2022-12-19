@@ -1,0 +1,22 @@
+smart_pv_surplus_powerplug:
+  alias: Smart PV surplus Powerplug
+  sequence:
+  - if:
+    - condition: state
+      entity_id: binary_sensor.smart_pv_plug_threshold
+      state: 'on'
+      for:
+        hours: 0
+        minutes: 1
+        seconds: 0
+    then:
+    - type: turn_on
+      device_id: 436f21aba3b17524c69060ed082579e3
+      entity_id: switch.shelly_switch_channel_2
+      domain: switch
+    else:
+    - type: turn_off
+      device_id: 436f21aba3b17524c69060ed082579e3
+      entity_id: switch.shelly_switch_channel_2
+      domain: switch
+  mode: restart

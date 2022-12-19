@@ -1,0 +1,16 @@
+[Unit]
+Description=ebusd
+#User=tv
+Requires=docker.service homeassistant.service
+After=docker.service network.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/home/tv/dockerContainers/ebusd
+ExecStart=/usr/bin/ebusd -d 192.168.1.4:5555 -p 8888 --mqtthost localhost --mqttport 1883 --mqttint=/etc/ebusd/mqtt-hassio.cfg --mqttjson --mqtttopic=ebusd --log=all:notice --configpath=/home/tv/dockerContainers/ebusd/ebusd-configuration/ebusd-2.1.x/de --scanconfig
+ExecStop=/usr/bin/ebusd -d 192.168.1.4:5555 -i stop
+TimeoutStartSec=15
+
+[Install]
+WantedBy=multi-user.target
