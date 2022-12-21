@@ -7,7 +7,7 @@ smart_pv_surplus_powerplug:
       state: 'on'
       for:
         hours: 0
-        minutes: 1
+        minutes: 5
         seconds: 0
     then:
     - type: turn_on
@@ -15,8 +15,51 @@ smart_pv_surplus_powerplug:
       entity_id: switch.shelly_switch_channel_2
       domain: switch
     else:
-    - type: turn_off
-      device_id: 436f21aba3b17524c69060ed082579e3
-      entity_id: switch.shelly_switch_channel_2
+    - if:
+      - condition: state
+        entity_id: binary_sensor.smart_pv_plug_threshold
+        attribute: sensor_value
+        state: 'off'
+        for:
+          hours: 0
+          minutes: 5
+          seconds: 0
+      then:
+      - type: turn_off
+        device_id: 436f21aba3b17524c69060ed082579e3
+        entity_id: switch.shelly_switch_channel_2
+        domain: switch
+  mode: restart
+wp_boiler_control:
+  alias: WP Boiler Control
+  sequence:
+  - if:
+    - condition: state
+      entity_id: binary_sensor.wp_boiler_force_threshold
+      attribute: sensor_value
+      state: 'On'
+      for:
+        hours: 0
+        minutes: 6
+        seconds: 0
+    then:
+    - type: turn_on
+      device_id: 118b8c5734ac3b597bb20bdc016ae97c
+      entity_id: switch.powermeter
       domain: switch
+    else:
+    - if:
+      - condition: state
+        entity_id: binary_sensor.wp_boiler_force_threshold
+        attribute: sensor_value
+        state: 'Off'
+        for:
+          hours: 0
+          minutes: 6
+          seconds: 0
+      then:
+      - type: turn_off
+        device_id: 118b8c5734ac3b597bb20bdc016ae97c
+        entity_id: switch.powermeter
+        domain: switch
   mode: restart

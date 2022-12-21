@@ -24,6 +24,25 @@ switch:
     host: 192.168.1.244
     name: plug_and_play_solar
 
+
+homematic:
+  interfaces:
+    hmip:
+      host: 192.168.1.154
+      port: 2010
+      resolvenames: json
+      username: "Admin"
+      password: "b2dMBoMVu9MpzEAFYyFT"
+    wireless:
+      host: 192.168.1.154
+      username: "Admin"
+      password: "b2dMBoMVu9MpzEAFYyFT"
+  hosts:
+    raspberrymatic:
+      host: 192.168.1.154
+      username: "Admin"
+      password: "b2dMBoMVu9MpzEAFYyFT"
+
 sensor:
   - platform: rest
     resource: http://192.168.1.244/report
