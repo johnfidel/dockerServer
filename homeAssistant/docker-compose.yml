@@ -1,5 +1,15 @@
 version: '3'
 services:
+#    db:
+#        image: mariadb:10.9
+#        restart: always
+#        environment:
+#            MARIADB_USER: mariadb_user
+#            MARIADB_ROOT_PASSWORD: mariadb
+#            MARIADB_DATABASE: mariadb
+#        ports:
+#            - 0.0.0.0:3808:3808
+
     mosquitto:
         image: eclipse-mosquitto:2
         volumes:

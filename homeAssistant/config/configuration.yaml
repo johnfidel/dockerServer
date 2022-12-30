@@ -10,6 +10,11 @@ frontend:
 tts:
   - platform: google_translate
 
+# persistent storage
+#recorder:
+#  db_url: mysql://mariadb_user:mariadb@127.0.0.1:3808/mariadb?charset=utf8mb4
+#  purge_keep_days: 365
+
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
