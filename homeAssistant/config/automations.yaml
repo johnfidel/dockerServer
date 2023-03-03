@@ -78,3 +78,43 @@
         entity_id: switch.powermeter
         domain: switch
   mode: single
+- id: '1675807761883'
+  alias: Heating WP force ON
+  description: ''
+  trigger:
+  - platform: time_pattern
+    hours: '*'
+    minutes: /1
+    seconds: '0'
+  condition: []
+  action:
+  - if:
+    - condition: state
+      entity_id: binary_sensor.heating_wp_force_threshold
+      attribute: position
+      state: below
+      for:
+        hours: 0
+        minutes: 6
+        seconds: 0
+    then:
+    - type: turn_on
+      device_id: b4a45d18308989588ee2ce5d9da0a742
+      entity_id: switch.shellyem3_349454747c42
+      domain: switch
+    else:
+    - if:
+      - condition: state
+        entity_id: binary_sensor.heating_wp_force_threshold
+        attribute: position
+        state: above
+        for:
+          hours: 0
+          minutes: 6
+          seconds: 0
+      then:
+      - type: turn_off
+        device_id: b4a45d18308989588ee2ce5d9da0a742
+        entity_id: switch.shellyem3_349454747c42
+        domain: switch
+  mode: single
