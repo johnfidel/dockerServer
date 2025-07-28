@@ -13,7 +13,7 @@ tts:
 # persistent storage
 recorder:
 #  db_url: mysql://mariadb_user:mariadb@127.0.0.1:3808/mariadb?charset=utf8mb4
-  purge_keep_days: 400
+  purge_keep_days: 100
   commit_interval: 10
 
 automation: !include automations.yaml
@@ -110,33 +110,11 @@ template:
           }}
 
   - sensor:
-      - name: "Solarplant energy total"
-        unit_of_measurement: "kWh"
-        device_class: energy
-        state_class: total_increasing
-        unique_id: shelly.solarplant_energy_total
-        state: >
-          {{ (states('sensor.shellyem3_349454747c42_channel_a_energy')|float +
-              states('sensor.shellyem3_349454747c42_channel_b_energy')|float +
-              states('sensor.shellyem3_349454747c42_channel_c_energy')|float)|round(2)|float
-          }}
-
-  - sensor:
-      - name: "Roof solarplant power total"
-        unit_of_measurement: "W"   
-        unique_id: shelly.roof_solarplant_power_total
-        state: >
-          {{ (states('sensor.shellyem3_349454747c42_channel_a_power')|float +
-              states('sensor.shellyem3_349454747c42_channel_b_power')|float +
-              states('sensor.shellyem3_349454747c42_channel_c_power')|float)|round(2)|float
-          }}
-
-  - sensor:
       - name: "Solarplant power total"
         unit_of_measurement: "W"   
         unique_id: shelly.solarplant_power_total
         state: >
-          {{ (states('sensor.roof_solarplant_power_total')|float +
+          {{ (states('sensor.symo_8_2_3_m_1_power_ac')|float +
               states('sensor.p_p_solar_power')|float)|round(2)|float
           }}
 

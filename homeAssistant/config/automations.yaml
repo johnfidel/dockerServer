@@ -1,120 +1,182 @@
 - id: '1671823778675'
   alias: Smart PV Plug
   description: ''
-  trigger:
-  - platform: time_pattern
-    hours: '*'
-    minutes: /1
-    seconds: '0'
-  condition: []
-  action:
+  triggers:
+  - entity_id:
+    - binary_sensor.smart_pv_plug_threshold
+    for:
+      hours: 0
+      minutes: 3
+      seconds: 0
+    from: 'off'
+    to: 'on'
+    trigger: state
+  - entity_id:
+    - binary_sensor.smart_pv_plug_threshold
+    for:
+      hours: 0
+      minutes: 3
+      seconds: 0
+    from: 'on'
+    to: 'off'
+    trigger: state
+  - trigger: homeassistant
+    event: start
+  conditions: []
+  actions:
   - if:
     - condition: state
       entity_id: binary_sensor.smart_pv_plug_threshold
-      attribute: position
-      for:
-        hours: 0
-        minutes: 3
-        seconds: 0
-      state: above
+      state: 'on'
     then:
     - type: turn_on
       device_id: 436f21aba3b17524c69060ed082579e3
       entity_id: switch.shelly_switch_channel_2
       domain: switch
     else:
-    - if:
-      - condition: state
-        entity_id: binary_sensor.smart_pv_plug_threshold
-        attribute: position
-        state: below
-        for:
-          hours: 0
-          minutes: 3
-          seconds: 0
-      then:
-      - type: turn_off
-        device_id: 436f21aba3b17524c69060ed082579e3
-        entity_id: switch.shelly_switch_channel_2
-        domain: switch
+    - type: turn_off
+      device_id: 436f21aba3b17524c69060ed082579e3
+      entity_id: switch.shelly_switch_channel_2
+      domain: switch
   mode: single
 - id: '1671826077271'
   alias: WP Boiler force ON
   description: ''
-  trigger:
-  - platform: time_pattern
-    minutes: /1
-    seconds: '0'
-    hours: '*'
-  condition: []
-  action:
+  triggers:
+  - entity_id:
+    - binary_sensor.wp_boiler_force_threshold
+    from: 'off'
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 4
+      seconds: 0
+    trigger: state
+  - entity_id:
+    - binary_sensor.wp_boiler_force_threshold
+    from: 'on'
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 4
+      seconds: 0
+    trigger: state
+  - trigger: homeassistant
+    event: start
+  conditions: []
+  actions:
   - if:
     - condition: state
       entity_id: binary_sensor.wp_boiler_force_threshold
-      attribute: position
-      state: below
-      for:
-        hours: 0
-        minutes: 5
-        seconds: 0
+      state: 'on'
     then:
     - type: turn_on
       device_id: 118b8c5734ac3b597bb20bdc016ae97c
       entity_id: switch.powermeter
       domain: switch
     else:
-    - if:
-      - condition: state
-        entity_id: binary_sensor.wp_boiler_force_threshold
-        attribute: position
-        state: above
-        for:
-          hours: 0
-          minutes: 5
-          seconds: 0
-      then:
-      - type: turn_off
-        device_id: 118b8c5734ac3b597bb20bdc016ae97c
-        entity_id: switch.powermeter
-        domain: switch
+    - type: turn_off
+      device_id: 118b8c5734ac3b597bb20bdc016ae97c
+      entity_id: switch.powermeter
+      domain: switch
   mode: single
 - id: '1675807761883'
   alias: Heating WP force ON
   description: ''
-  trigger:
-  - platform: time_pattern
-    hours: '*'
-    minutes: /1
-    seconds: '0'
-  condition: []
-  action:
+  triggers:
+  - entity_id:
+    - binary_sensor.heating_wp_force_threshold
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+    from: 'off'
+    to: 'on'
+    trigger: state
+  - entity_id:
+    - binary_sensor.heating_wp_force_threshold
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+    from: 'on'
+    to: 'off'
+    trigger: state
+  - trigger: homeassistant
+    event: start
+  conditions: []
+  actions:
   - if:
     - condition: state
       entity_id: binary_sensor.heating_wp_force_threshold
-      attribute: position
-      state: below
-      for:
-        hours: 0
-        minutes: 6
-        seconds: 0
+      state: 'on'
     then:
     - type: turn_on
       device_id: b4a45d18308989588ee2ce5d9da0a742
       entity_id: switch.shellyem3_349454747c42
       domain: switch
     else:
-    - if:
-      - condition: state
-        entity_id: binary_sensor.heating_wp_force_threshold
-        attribute: position
-        state: above
-        for:
-          hours: 0
-          minutes: 6
-          seconds: 0
-      then:
-      - type: turn_off
-        device_id: b4a45d18308989588ee2ce5d9da0a742
-        entity_id: switch.shellyem3_349454747c42
-        domain: switch
+    - type: turn_off
+      device_id: b4a45d18308989588ee2ce5d9da0a742
+      entity_id: switch.shellyem3_349454747c42
+      domain: switch
+  mode: single
+- id: '1698527560878'
+  alias: Thermostates
+  description: ''
+  triggers:
+  - entity_id:
+    - binary_sensor.heating_wp_force_threshold
+    from: 'off'
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+    trigger: state
+  - entity_id:
+    - binary_sensor.heating_wp_force_threshold
+    from: 'on'
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+    trigger: state
+  - trigger: homeassistant
+    event: start
+  conditions: []
+  actions:
+  - if:
+    - condition: state
+      entity_id: binary_sensor.heating_wp_force_threshold
+      state: 'on'
+    then:
+    - data:
+        temperature: 24
+      target:
+        entity_id:
+        - climate.livingroom
+        - climate.homeoffice
+        - climate.toilett
+      action: climate.set_temperature
+    else:
+    - data:
+        temperature: 20.5
+      target:
+        entity_id:
+        - climate.toilett
+      action: climate.set_temperature
+    - data:
+        temperature: 19.5
+      target:
+        entity_id:
+        - climate.homeoffice
+      action: climate.set_temperature
+    - data:
+        temperature: 21
+      target:
+        entity_id:
+        - climate.livingroom
+      action: climate.set_temperature
   mode: single

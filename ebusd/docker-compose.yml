@@ -6,7 +6,7 @@ services:
             - ./ebusd-configuration:/home/ebusd-configuration
             - ./ebusd-etc:/etc           
         environment:
-            - EBUSD_DEVICE=192.168.1.4:5555
+            - EBUSD_DEVICE=ens:192.168.1.4:5555
             #- EBUSD_SCANCONFIG=./ebusd-configuration/ebusd-2.x.x/de/vaillant/08.hmu00.csv
             - EBUSD_CONFIGPATH=/home/ebusd-configuration/ebusd-2.1.x/de/
             #- EBUSD_HTTPPORT=80
